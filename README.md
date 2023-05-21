@@ -3,7 +3,7 @@
 A collision handler for objects of different shapes and sizes has been implemented. Perfectly elastic objects move within the window and collide according to the laws of physics. To optimize the algorithmic complexity of the algorithm, a quadtree structure is used.
 
 <p align="center">
-  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTY2Nzg4MWNlNjdkMTJiNGE4MTdiNzRmMjk3YTM3NzVmNDJkYzNhNCZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/lEDJao3qwbS12UCz7r/giphy.gif" width="600" height="338" />
+  <img src="https://github.com/smirnovlad/CollisionHandler/assets/86618271/f9688756-a854-474d-90ed-ab421dc9003c" width="600" height="338" />
 </p>
 
 ## Solution
