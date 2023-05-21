@@ -1,58 +1,50 @@
-# CollisionHandler
+# Collision handler
+
+A collision handler for objects of different shapes and sizes has been implemented. Perfectly elastic objects move within the window and collide according to the laws of physics. To optimize the algorithmic complexity of the algorithm, a quadtree structure is used.
+
+<p align="center">
+  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTY2Nzg4MWNlNjdkMTJiNGE4MTdiNzRmMjk3YTM3NzVmNDJkYzNhNCZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/lEDJao3qwbS12UCz7r/giphy.gif" width="600" height="338" />
+</p>
+
 ## Solution
 
-В начале решения задачи рассматривал несколько возможных путей:
-<ul>
-  <li>Разделить окно на квадратные клетки некоторого размера и в процессе перемещения кругов поддерживать, какие кругы частично или полностью покрывают каждую клетку. В данном варианте решения задачи есть множество нюансов. </li>
-  <li>Хранить для каждого круга "хитбокс", т.е. прямоугольник, полностью содержащий данный круг. В процессе перемещения кругов проверять хитбоксы на пересечения/касания при помощи сканирующей прямой (ScanLine) и дерева интервалов. Также возникает ряд вопросов к такому подходу. </li>
-  <li>В процессе решения задачи делить окно на квадраты в соответствии с определением структуры данных QuadTree, на чём я и остановился. </li>
-</ul>
+At the beginning of solving the problem, I considered several possible approaches:
+* Dividing the window into square cells of a certain size and keeping track of which circles partially or completely cover each cell during the movement. This approach has multiple nuances.
+
+* Storing a "hitbox" for each circle, which is a rectangle that fully contains the circle. During the movement of the circles, checking for intersections/touches of the hitboxes using a scanline and an interval tree. However, there are several questions regarding this approach.
+
+* During the problem-solving process, dividing the window into squares according to the QuadTree data structure definition, which is the approach I settled on.
 
 ## Complexity
 
-Ожидаемая асимптотика времени добавления круга в структуру: **O(log n)**.
+* The expected time complexity for adding a circle to the structure is **O(log n)**. In the worst case, adding a circle takes **O(n)** operations.
 
-В худшем случае добавление круга занимает **O(n)** операций.
+* The time complexity for one iteration, assuming a uniform distribution of circles, is  **O(n^1.5 log n)**. This is because the expected time for descending the QuadTree is **O(log n)**, and the expected number of neighbors is estimated to be **O(sqrt(n))**.
 
-Асимптотика времени работы одной итерации при условии равномерного распределения кругов есть **O(n^1.5 log n)**,
-поскольку ожидаемое время спуска по дереву QuadTree есть **O(log n)** и ожидаемое число соседей оценивается **O(sqrt(n))** .
-
-В силу ограниченности числа соседей, ожидаемая асимптотика времени работы одной итерации: **O(n log n)**.
-
+* Due to the limited number of neighbors, the expected time complexity for one iteration is  **O(n log n)**.
+  
 ## Implementation details
 
-Для поддержки структуры QuadTree разработано две реализации: дерево на куче и дерево на стеке.
-Преимущество второго варианта относительно первого заключается в скорости работы.
-В процессе перемещения кругов при работе с ноутбуком случаются зависания (фризы), поэтому у меня и появилась идея поддержать QuadTree на стеке.
-Невооружённым взглядом кажется, что при использовании дерева на стеке фризов действительно становится меньше.
-Замечу, что на втором, куда более мощном, компьютере фризов не видно.
+Two implementations have been developed to support the QuadTree structure: a heap-based tree and a stack-based tree. The advantage of the second option over the first one lies in its faster performance. During the movement of circles while working with a laptop, there are occasional freezes, which is why I came up with the idea of supporting the QuadTree on the stack. It seems that using the stack-based tree indeed reduces the occurrence of freezes. I would like to note that on the second, more powerful computer, no freezes are observed.
 
-Если использовать выведенные формулы для накладывающихся друг на друга кругов без изменения их относительного положения,
-возможно неопределённое поведение в их дальнейшем движении.
-Поэтому перед изменением скоростей двух касающихся кругов (которые могут накладываться в силу дискретности времени и
-ограничений на скорость кругов) я двигаю один из них вдоль линии их центров так, чтобы они касались друг на друга.
-В таком случае на следующей итерации эти два круга не будут накладываться друг друга. Более умного решения не придумал...
-Дополнительные комментарии по поводу обработки касания см. в коде **ball.cpp**.
+If the derived formulas for overlapping circles without changing their relative positions are used, there may be unpredictable behavior in their subsequent movement. Therefore, before changing the velocities of two touching circles (which may overlap due to the discreteness of time and constraints on the circles' speed), I move one of them along the line connecting their centers so that they touch each other. In this case, on the next iteration, these two circles will not overlap each other. I haven't come up with a smarter solution... For additional comments regarding collision handling, please refer to the code in ball.cpp.
 
-При выходе кругов за пределы окна я предполагаю, что смещение круга за край не велико и поэтому сдвигаю шар до положения
-касания с соответствующей границей.
-
-Комментарии относительно изменений изначального исходного кода есть в самом коде.
+When circles go beyond the window boundaries, I assume that the circle's displacement beyond the edge is small. Therefore, I shift the ball to the position where it touches the corresponding boundary.
 
 ## Architecture
 
-При разработке приложения следовал принципа SOLID. Итого, в текущей версии проекта мы можем добавить класс новой фигуры (например, прямоугольника) и работать уже с ней. Класс симуляции и структуры QuadTree шаблонизированы, класс фигур расширяем.
+During the development of the application, the SOLID principles were followed. As a result, in the current version of the project, it is possible to add a new shape class (e.g., a rectangle) and work with it seamlessly. The simulation class and the QuadTree structure are both templated, allowing for flexibility in accommodating different types of shapes.
 
-[Диаграмма классов для симуляции](UML/simulation.drawio.png?raw=true "Simulation class diagram")
+[Class diagram for simulation](UML/simulation.drawio.png?raw=true "Simulation class diagram")
 
-[Диаграмма классов для структуры QuadTree](UML/quad_tree.drawio.png?raw=true "quad_tree class diagram")
+[Class diagram for the QuadTree structure](UML/quad_tree.drawio.png?raw=true "quad_tree class diagram")
 
-[Диаграмма классов для фигур](UML/shape.drawio.png?raw=true "Shape class diagram")
+[Class diagram for shapes](UML/shape.drawio.png?raw=true "Shape class diagram")
 
 
 ## Build
 
-В проекте есть 1 таргет для запуска:
+The project has one target for execution:
 <ul>
   <li> main </li>
 
@@ -63,11 +55,11 @@
 
 [//]: # (Последние два я использовал для тестирования решения.)
 
-Для запуска приложения необходимо выбрать таргет **main**.
+To launch the application, you need to select the target **main**.
 
 ## References
 
-[Формулы для расчёта движения кругов](https://en.wikipedia.org/wiki/Elastic_collision)
+[Formulas for calculating the movement of circles](https://en.wikipedia.org/wiki/Elastic_collision)
 
 [QuadTree #1](https://vixra.org/pdf/2005.0108v1.pdf)
 
