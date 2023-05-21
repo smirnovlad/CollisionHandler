@@ -35,11 +35,11 @@ When circles go beyond the window boundaries, I assume that the circle's displac
 
 During the development of the application, the SOLID principles were followed. As a result, in the current version of the project, it is possible to add a new shape class (e.g., a rectangle) and work with it seamlessly. The simulation class and the QuadTree structure are both templated, allowing for flexibility in accommodating different types of shapes.
 
-[Class diagram for simulation](UML/simulation.drawio.png?raw=true "Simulation class diagram")
+[Class diagram for simulation](BallCollision/UML/simulation.drawio.png?raw=true "Simulation class diagram")
 
-[Class diagram for the QuadTree structure](UML/quad_tree.drawio.png?raw=true "quad_tree class diagram")
+[Class diagram for the QuadTree structure](BallCollision/UML/quad_tree.drawio.png?raw=true "quad_tree class diagram")
 
-[Class diagram for shapes](UML/shape.drawio.png?raw=true "Shape class diagram")
+[Class diagram for shapes](BallCollision/UML/shape.drawio.png?raw=true "Shape class diagram")
 
 
 ## Build
